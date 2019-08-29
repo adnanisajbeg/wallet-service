@@ -1,18 +1,18 @@
 package playground.test.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import playground.test.model.User;
 import playground.test.model.UserDTO;
+import playground.test.repository.UserRepository;
 
 @Component
 public class UserService {
+    @Autowired
+    UserRepository userRepository;
+
     public User addNewUser(UserDTO userDTO) {
-        // TODO: validate user
-
         User user = new User(userDTO);
-
-        // TODO: save user
-
-        return user;
+        return userRepository.save(user);
     }
 }

@@ -1,8 +1,9 @@
 package playground.test.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class UserDTO {
+public class UserDTO implements Serializable {
     private String username;
     private Long balance;
 
