@@ -3,7 +3,7 @@ package playground.test.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class UserDTO implements Serializable {
+public class PlayerDTO implements Serializable {
     private String username;
     private Long balance;
 
@@ -15,10 +15,10 @@ public class UserDTO implements Serializable {
         return balance;
     }
 
-    public UserDTO() {
+    public PlayerDTO() {
     }
 
-    public UserDTO(String username) {
+    public PlayerDTO(String username) {
         this.username = username;
     }
 
@@ -26,9 +26,9 @@ public class UserDTO implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserDTO userDTO = (UserDTO) o;
-        return Objects.equals(username, userDTO.username) &&
-                Objects.equals(balance, userDTO.balance);
+        PlayerDTO playerDTO = (PlayerDTO) o;
+        return Objects.equals(username, playerDTO.username) &&
+                Objects.equals(balance, playerDTO.balance);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class UserDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "UserDTO{" +
+        return "PlayerDTO{" +
                 "username='" + username + '\'' +
                 ", balance=" + balance +
                 '}';

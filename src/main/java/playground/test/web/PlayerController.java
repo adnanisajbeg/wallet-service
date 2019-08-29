@@ -4,17 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import playground.test.model.UserDTO;
-import playground.test.service.UserService;
+import playground.test.model.PlayerDTO;
+import playground.test.service.PlayerService;
 
 @RestController
-public class UserController {
+public class PlayerController {
     @Autowired
-    UserService userService;
+    PlayerService playerService;
 
-    @PostMapping("/user/add")
-    public boolean addUser(@RequestBody UserDTO newUser) {
-        userService.addNewUser(newUser);
+    @PostMapping("/player/add")
+    public boolean addPlayer(@RequestBody PlayerDTO newPlayer) {
+        playerService.addNewPlayer(newPlayer);
         return true;
     }
 }

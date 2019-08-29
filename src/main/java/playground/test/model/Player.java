@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
-public class User {
+public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int id;
@@ -16,8 +16,8 @@ public class User {
     public String username;
     public Long balance;
 
-    public User(UserDTO userDTO) {
-        username = userDTO.getUsername();
+    public Player(PlayerDTO playerDTO) {
+        username = playerDTO.getUsername();
         balance = 0L;
     }
 
@@ -49,10 +49,10 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id &&
-                Objects.equals(username, user.username) &&
-                Objects.equals(balance, user.balance);
+        Player player = (Player) o;
+        return id == player.id &&
+                Objects.equals(username, player.username) &&
+                Objects.equals(balance, player.balance);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Player{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", balance=" + balance +

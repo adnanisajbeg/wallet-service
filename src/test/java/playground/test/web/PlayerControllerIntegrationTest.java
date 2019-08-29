@@ -11,13 +11,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import playground.test.model.UserDTO;
+import playground.test.model.PlayerDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControllerIntegrationTest {
+public class PlayerControllerIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -25,12 +25,12 @@ public class UserControllerIntegrationTest {
     int randomServerPort;
 
     @Test
-    public void when_adding_new_user_true_is_returned() {
+    public void when_adding_new_player_true_is_returned() {
         // Given
-        HttpEntity<UserDTO> randomNewUser = createUserWithRandomUsername();
+        HttpEntity<PlayerDTO> playerWithRandomUsername = createPlayerWithRandomUsername();
 
         // When
-        ResponseEntity<Boolean> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/user/add", randomNewUser, Boolean.class);
+        ResponseEntity<Boolean> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add", playerWithRandomUsername, Boolean.class);
 
         // Then
         assertThat(result).isNotNull();
@@ -38,8 +38,8 @@ public class UserControllerIntegrationTest {
         assertThat(result.getBody()).isNotNull().isTrue();
     }
 
-    private HttpEntity<UserDTO> createUserWithRandomUsername() {
+    private HttpEntity<PlayerDTO> createPlayerWithRandomUsername() {
         String username = RandomStringUtils.random(10);
-        return new HttpEntity<>(new UserDTO(username));
+        return new HttpEntity<>(new PlayerDTO(username));
     }
 }
