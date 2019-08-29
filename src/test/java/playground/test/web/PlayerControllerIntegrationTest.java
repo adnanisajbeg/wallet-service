@@ -30,12 +30,31 @@ public class PlayerControllerIntegrationTest {
         HttpEntity<PlayerDTO> playerWithRandomUsername = createPlayerWithRandomUsername();
 
         // When
-        ResponseEntity<Boolean> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add", playerWithRandomUsername, Boolean.class);
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add", playerWithRandomUsername, String.class);
 
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody()).isNotNull().isTrue();
+        assertThat(result.getBody()).isNotNull().isEqualTo("User created!");
+    }
+
+    @Test
+    public void when_adding_new_player_with_existing_username_error_is_returned() {
+        // Given
+        HttpEntity<PlayerDTO> playerWithRandomUsername = createPlayerWithRandomUsername();
+
+        // When
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add", playerWithRandomUsername, String.class);
+        ResponseEntity<String> result2 = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add", playerWithRandomUsername, String.class);
+
+        // Then
+        assertThat(result).isNotNull();
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody()).isNotNull().isEqualTo("User created!");
+
+        assertThat(result2).isNotNull();
+        assertThat(result2.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(result2.getBody()).isNotNull().isEqualTo("Username already taken!");
     }
 
     private HttpEntity<PlayerDTO> createPlayerWithRandomUsername() {
