@@ -1,9 +1,6 @@
 package playground.test.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -13,6 +10,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int id;
     @NotNull
+    @Column(unique = true)
     public String username;
     public Long balance;
 

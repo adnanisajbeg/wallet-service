@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import playground.test.model.Player;
 import playground.test.model.PlayerDTO;
@@ -46,5 +47,16 @@ public class PlayerServiceIntegrationTest {
         // Then
         assertThat(player).isNotNull();
         assertThat(player.getId()).isGreaterThan(0);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void when_saving_new_player_with_existing_username_error_is_thrown() {
+        // Given
+        PlayerDTO playerDTO = createPlayerWithRandomUsername();
+
+        // When
+        Player player = playerService.addNewPlayer(playerDTO);
+        Player player2 = playerService.addNewPlayer(playerDTO);
+
     }
 }
