@@ -18,8 +18,14 @@ public class PlayerDTO implements Serializable {
     public PlayerDTO() {
     }
 
+    public PlayerDTO(Player player) {
+        this.username = player.getUsername();
+        this.balance = player.getBalance();
+    }
+
     public PlayerDTO(String username) {
         this.username = username;
+        this.balance = 0L;
     }
 
     @Override

@@ -14,6 +14,9 @@ public class Player {
     public String username;
     public Long balance;
 
+    public Player() {
+    }
+
     public Player(PlayerDTO playerDTO) {
         username = playerDTO.getUsername();
         balance = 0L;

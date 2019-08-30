@@ -59,4 +59,17 @@ public class PlayerServiceIntegrationTest {
         Player player2 = playerService.addNewPlayer(playerDTO);
 
     }
+
+    @Test
+    public void when_searching_for_player_with_existing_username_correct_player_is_returned() {
+        // Given
+        PlayerDTO playerDTO = createPlayerWithRandomUsername();
+        Player player = playerService.addNewPlayer(playerDTO);
+
+        // When
+        Player searchedPlayer = playerService.findUserByUsername(player.getUsername());
+
+        // Then
+        assertThat(searchedPlayer).isNotNull().isEqualToComparingFieldByField(player);
+    }
 }

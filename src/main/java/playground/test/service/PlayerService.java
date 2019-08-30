@@ -15,4 +15,8 @@ public class PlayerService {
         Player player = new Player(playerDTO);
         return playerRepository.save(player);
     }
+
+    public Player findUserByUsername(String username) {
+        return playerRepository.findByUsername(username);
+    }
 }
