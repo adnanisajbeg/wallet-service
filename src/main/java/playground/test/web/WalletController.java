@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import playground.test.model.Player;
 import playground.test.service.PlayerService;
+
+import java.util.UUID;
 
 import static playground.test.utils.Messages.USERNAME_NOT_FOUND_ERROR_MESSAGE;
 
@@ -23,6 +26,12 @@ public class WalletController {
         if (player != null) {
             return new ResponseEntity<>(player.getBalance().toString(), HttpStatus.OK);
         }
+
+        return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/wallet/credit")
+    public ResponseEntity<String> addCredit(@RequestParam String username, Long amount, UUID id) {
 
         return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
     }

@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static playground.test.utils.Messages.USERNAME_TAKEN_ERROR_MESSAGE;
 import static playground.test.utils.Messages.USER_CREATED_MESSAGE;

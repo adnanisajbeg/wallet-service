@@ -10,11 +10,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import playground.test.model.PlayerDTO;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static playground.test.utils.Messages.CREDIT_ADDED_SUCCESFULLY_MESSAGE;
 import static playground.test.utils.Messages.USERNAME_NOT_FOUND_ERROR_MESSAGE;
-import static playground.test.utils.PlayerUtils.createPlayerWithRandomUsername;
 import static playground.test.utils.PlayerUtils.createRequestEntityWithRandomUsername;
 
 @RunWith(SpringRunner.class)
@@ -55,4 +56,22 @@ public class WalletControllerIntegrationTest {
         assertThat(balance.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(balance.getBody()).isNotNull().isEqualTo(USERNAME_NOT_FOUND_ERROR_MESSAGE);
     }
+
+    @Test
+    public void when_adding_balance_to_existing_player_correct_amount_is_added() {
+        // Given
+        HttpEntity<String> player = createRequestEntityWithRandomUsername();
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add", player, String.class);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        UUID id = UUID.randomUUID();
+
+        // When
+        ResponseEntity<String> resultAddingBalance = restTemplate.getForEntity("http://localhost:" + randomServerPort + "/wallet/credit?username={param1}&amount={}&transactionId={}", String.class, player.getBody(), 10L, id);
+
+        // Then
+        assertThat(resultAddingBalance).isNotNull();
+        assertThat(resultAddingBalance.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(resultAddingBalance.getBody()).isEqualTo(CREDIT_ADDED_SUCCESFULLY_MESSAGE + player.getBody() + "!");
+    }
+
 }
