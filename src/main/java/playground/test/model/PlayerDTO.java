@@ -15,10 +15,10 @@ public class PlayerDTO implements Serializable {
         return balance;
     }
 
-    public PlayerDTO() {
+    PlayerDTO() {
     }
 
-    public PlayerDTO(Player player) {
+    PlayerDTO(Player player) {
         this.username = player.getUsername();
         this.balance = player.getBalance();
     }

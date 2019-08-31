@@ -19,9 +19,9 @@ public class PlayerController {
     PlayerService playerService;
 
     @PostMapping("/player/add")
-    public ResponseEntity<String> addPlayer(@RequestBody PlayerDTO newPlayer) {
+    public ResponseEntity<String> addPlayer(@RequestBody String username) {
         try {
-            playerService.addNewPlayer(newPlayer);
+            playerService.addNewPlayer(new PlayerDTO(username));
         } catch (DataIntegrityViolationException ex) {
             return new ResponseEntity<>(USERNAME_TAKEN_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
