@@ -67,11 +67,15 @@ public class WalletControllerIntegrationTest {
 
         // When
         ResponseEntity<String> resultAddingBalance = restTemplate.getForEntity("http://localhost:" + randomServerPort + "/wallet/credit?username={param1}&amount={}&transactionId={}", String.class, player.getBody(), 10L, id);
+        ResponseEntity<String> balance = restTemplate.getForEntity("http://localhost:" + randomServerPort + "/wallet?username={param1}", String.class, player.getBody());
 
         // Then
         assertThat(resultAddingBalance).isNotNull();
         assertThat(resultAddingBalance.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(resultAddingBalance.getBody()).isEqualTo(CREDIT_ADDED_SUCCESFULLY_MESSAGE + player.getBody() + "!");
+        assertThat(balance).isNotNull();
+        assertThat(balance.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(balance.getBody()).isEqualTo("10");
     }
 
 }
