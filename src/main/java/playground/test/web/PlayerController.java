@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import playground.test.model.PlayerDTO;
 import playground.test.service.PlayerService;
 
+import static playground.test.utils.Messages.USERNAME_TAKEN_ERROR_MESSAGE;
+import static playground.test.utils.Messages.USER_CREATED_MESSAGE;
+
 @RestController
 public class PlayerController {
     @Autowired
@@ -20,8 +23,8 @@ public class PlayerController {
         try {
             playerService.addNewPlayer(newPlayer);
         } catch (DataIntegrityViolationException ex) {
-            return new ResponseEntity<>("Username already taken!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(USERNAME_TAKEN_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("User created!", HttpStatus.OK);
+        return new ResponseEntity<>(USER_CREATED_MESSAGE, HttpStatus.OK);
     }
 }

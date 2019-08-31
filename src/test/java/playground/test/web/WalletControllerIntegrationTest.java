@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import playground.test.model.PlayerDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static playground.test.utils.Messages.USERNAME_NOT_FOUND_ERROR_MESSAGE;
 import static playground.test.utils.PlayerUtils.createPlayerWithRandomUsername;
 
 @RunWith(SpringRunner.class)
@@ -37,6 +38,19 @@ public class WalletControllerIntegrationTest {
         assertThat(balance).isNotNull();
         assertThat(balance.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(balance.getBody()).isNotNull().isEqualTo("0");
+    }
 
+    @Test
+    public void when_asking_for_balance_for_non_existing_username_bad_request_is_returned() {
+        // Given
+        PlayerDTO player = createPlayerWithRandomUsername();
+
+        // When
+        ResponseEntity<String> balance = restTemplate.getForEntity("http://localhost:" + randomServerPort + "/wallet?username={param1}", String.class, player.getUsername());
+
+        // Then
+        assertThat(balance).isNotNull();
+        assertThat(balance.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(balance.getBody()).isNotNull().isEqualTo(USERNAME_NOT_FOUND_ERROR_MESSAGE);
     }
 }

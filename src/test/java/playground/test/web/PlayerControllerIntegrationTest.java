@@ -14,6 +14,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import playground.test.model.PlayerDTO;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static playground.test.utils.Messages.USERNAME_TAKEN_ERROR_MESSAGE;
+import static playground.test.utils.Messages.USER_CREATED_MESSAGE;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -50,11 +52,11 @@ public class PlayerControllerIntegrationTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody()).isNotNull().isEqualTo("User created!");
+        assertThat(result.getBody()).isNotNull().isEqualTo(USER_CREATED_MESSAGE);
 
         assertThat(result2).isNotNull();
         assertThat(result2.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(result2.getBody()).isNotNull().isEqualTo("Username already taken!");
+        assertThat(result2.getBody()).isNotNull().isEqualTo(USERNAME_TAKEN_ERROR_MESSAGE);
     }
 
     private HttpEntity<PlayerDTO> createPlayerWithRandomUsername() {

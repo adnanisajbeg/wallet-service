@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import playground.test.model.Player;
-import playground.test.model.PlayerDTO;
 import playground.test.service.PlayerService;
+
+import static playground.test.utils.Messages.USERNAME_NOT_FOUND_ERROR_MESSAGE;
 
 @RestController
 public class WalletController {
@@ -23,6 +24,6 @@ public class WalletController {
             return new ResponseEntity<>(player.getBalance().toString(), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("Invalid username!", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
     }
 }
