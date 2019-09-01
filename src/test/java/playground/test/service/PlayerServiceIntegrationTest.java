@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static playground.test.utils.PlayerUtils.createPlayerWithRandomUsername;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class PlayerServiceIntegrationTest {
     @Autowired
     PlayerService playerService;

@@ -8,11 +8,11 @@ import java.util.Objects;
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int id;
+    private int id;
     @NotNull
     @Column(unique = true)
-    public String username;
-    public Long balance;
+    private String username;
+    private Long balance;
 
     public Player() {
     }
@@ -68,5 +68,9 @@ public class Player {
                 ", username='" + username + '\'' +
                 ", balance=" + balance +
                 '}';
+    }
+
+    public void addCredit(Long credit) {
+        this.balance += credit;
     }
 }
