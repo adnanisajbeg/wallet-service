@@ -16,8 +16,7 @@ import playground.test.model.PlayerDTO;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static playground.test.utils.Messages.CREDIT_ADDED_SUCCESSFULLY_MESSAGE;
-import static playground.test.utils.Messages.USERNAME_NOT_FOUND_ERROR_MESSAGE;
+import static playground.test.utils.Messages.*;
 import static playground.test.utils.PlayerUtils.createPlayerWithRandomUsername;
 import static playground.test.utils.PlayerUtils.createRequestEntityWithRandomUsername;
 
@@ -125,7 +124,26 @@ public class WalletControllerIntegrationTest {
         // Then
         assertThat(balance).isNotNull();
         assertThat(balance.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(balance.getBody()).isEqualTo("46");
+        assertThat(balance.getBody()).isNotNull().isEqualTo("46");
+    }
+
+    @Test
+    public void when_adding_negative_credit_error_message_is_return() {
+        // Given
+        HttpEntity<String> player = createRequestEntityWithRandomUsername();
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add",
+                player, String.class);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        UUID id = UUID.randomUUID();
+
+        // When
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
+                new CreditSubmitDTO(id, player.getBody(), -12L), String.class);
+
+        // Then
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody()).isNotNull().isEqualTo(CREDIT_NON_POSITIVE_ERROR_MESSAGE);
     }
 
 }

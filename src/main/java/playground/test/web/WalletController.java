@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import playground.test.exceptions.InvalidInputException;
 import playground.test.exceptions.PlayerNotFoundException;
 import playground.test.model.CreditSubmitDTO;
 import playground.test.model.Player;
@@ -40,6 +41,8 @@ public class WalletController {
             walletService.addCreditForPlayer(creditSubmitDTO);
         } catch (PlayerNotFoundException pnfe) {
             return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
+        } catch (InvalidInputException iie) {
+            return new ResponseEntity<>(iie.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + creditSubmitDTO.getUsername() + "!", HttpStatus.OK);
