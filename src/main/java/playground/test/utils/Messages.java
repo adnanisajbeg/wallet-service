@@ -7,5 +7,9 @@ public class Messages {
     public static final String CREDIT_ADDED_SUCCESSFULLY_MESSAGE = "Credit added to user ";
     public static final String PLAYER_NOT_FOUND_MESSAGE = "Player not found!";
 
+    public static final String CREDIT_NON_POSITIVE_ERROR_MESSAGE = "Credit for player must be positive!";
+    public static final String USERNAME_MUST_BE_PROVIDED_ERROR_MESSAGE = "Username must be provided!";
+    public static final String INPUT_OBJECT_IS_NULL_ERROR_MESSAGE = "Given input object is null!";
+
     private Messages() {}
 }

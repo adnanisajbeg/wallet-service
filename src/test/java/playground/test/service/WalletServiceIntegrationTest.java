@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import playground.test.exceptions.InvalidInputException;
 import playground.test.exceptions.PlayerNotFoundException;
 import playground.test.model.CreditSubmitDTO;
 import playground.test.model.Player;
@@ -69,6 +70,26 @@ public class WalletServiceIntegrationTest {
         Player playerStatus = playerRepository.findByUsername(player.getUsername());
         assertThat(playerStatus).isNotNull();
         assertThat(playerStatus.getBalance()).isEqualTo(15L + 11L + 23L + 56L);
+    }
+
+    @Test(expected = InvalidInputException.class)
+    public void when_adding_credit_to_null_username_invalidDataException_is_thrown() {
+        // Given
+        UUID id = UUID.randomUUID();
+
+        // When
+        walletService.addCreditForPlayer(new CreditSubmitDTO(id, null, 15L));
+    }
+
+    @Test(expected = InvalidInputException.class)
+    public void when_adding_negative_credit_to_existing_player_invalidDataException_is_thrown() {
+        // Given
+        Player player = playerRepository.save(new Player(createPlayerWithRandomUsername()));
+        assertThat(player).isNotNull();
+        UUID id = UUID.randomUUID();
+
+        // When
+        walletService.addCreditForPlayer(new CreditSubmitDTO(id, player.getUsername(), -15L));
     }
 
 }
