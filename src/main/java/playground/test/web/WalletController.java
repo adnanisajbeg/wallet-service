@@ -60,16 +60,16 @@ public class WalletController {
         try {
             walletService.withdrawForPlayer(debitSubmitDTO);
         } catch (PlayerNotFoundException pnfe) {
-//            transactionHistoryService.failed(debitSubmitDTO.getId());
+            transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         } catch (InvalidInputException iie) {
-//            transactionHistoryService.failed(debitSubmitDTO.getId());
+            transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(iie.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InsufficientFundsException tse) {
-//            transactionHistoryService.failed(debitSubmitDTO.getId());
+            transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(INSUFFICIENT_FUNDS_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-//            transactionHistoryService.failed(debitSubmitDTO.getId());
+            transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(TRANSACTION_FAILED_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
 
