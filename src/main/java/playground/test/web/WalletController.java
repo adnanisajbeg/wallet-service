@@ -3,7 +3,9 @@ package playground.test.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.*;
+import playground.test.exceptions.InsufficientFundsException;
 import playground.test.exceptions.InvalidInputException;
 import playground.test.exceptions.PlayerNotFoundException;
 import playground.test.model.CreditSubmitDTO;
@@ -12,8 +14,7 @@ import playground.test.model.Player;
 import playground.test.service.PlayerService;
 import playground.test.service.WalletService;
 
-import static playground.test.utils.Messages.CREDIT_ADDED_SUCCESSFULLY_MESSAGE;
-import static playground.test.utils.Messages.USERNAME_NOT_FOUND_ERROR_MESSAGE;
+import static playground.test.utils.Messages.*;
 
 @RestController
 public class WalletController {
@@ -55,6 +56,10 @@ public class WalletController {
             return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         } catch (InvalidInputException iie) {
             return new ResponseEntity<>(iie.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (InsufficientFundsException tse) {
+            return new ResponseEntity<>(INSUFFICIENT_FUNDS_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(TRANSACTION_FAILED_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + debitSubmitDTO.getUsername() + "!", HttpStatus.OK);

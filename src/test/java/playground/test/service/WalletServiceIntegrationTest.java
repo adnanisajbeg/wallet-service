@@ -139,6 +139,4 @@ public class WalletServiceIntegrationTest {
         // When
         walletService.withdrawForPlayer(new DebitSubmitDTO(id, player.getUsername(), 10L));
     }
-
-    
 }

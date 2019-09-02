@@ -2,6 +2,8 @@ package playground.test.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionSystemException;
+import playground.test.exceptions.InsufficientFundsException;
 import playground.test.exceptions.PlayerNotFoundException;
 import playground.test.model.CreditSubmitDTO;
 import playground.test.model.DebitSubmitDTO;
@@ -28,7 +30,11 @@ public class WalletService {
     public void withdrawForPlayer(DebitSubmitDTO debitSubmitDTO) {
         Player player = findPlayer(debitSubmitDTO.getUsername());
         player.withdraw(debitSubmitDTO.getCredit());
-        playerService.savePlayer(player);
+        try {
+            playerService.savePlayer(player);
+        } catch (TransactionSystemException tse) {
+            throw new InsufficientFundsException();
+        }
     }
 
     private Player findPlayer(String username) {

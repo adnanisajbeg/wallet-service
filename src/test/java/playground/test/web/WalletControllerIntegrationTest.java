@@ -160,18 +160,42 @@ public class WalletControllerIntegrationTest {
         UUID id = UUID.randomUUID();
 
         // When
-        ResponseEntity<String> resultAddingBalance = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/debit",
+        ResponseEntity<String> resultForWithdrawing = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/debit",
                 new DebitSubmitDTO(id, player.getBody(), 12L), String.class);
         ResponseEntity<String> balance = restTemplate.getForEntity("http://localhost:" + randomServerPort + "/wallet?username={param1}",
                 String.class, player.getBody());
 
         // Then
-        assertThat(resultAddingBalance).isNotNull();
-        assertThat(resultAddingBalance.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(resultAddingBalance.getBody()).isEqualTo(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + player.getBody() + "!");
+        assertThat(resultForWithdrawing).isNotNull();
+        assertThat(resultForWithdrawing.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(resultForWithdrawing.getBody()).isEqualTo(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + player.getBody() + "!");
         assertThat(balance).isNotNull();
         assertThat(balance.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(balance.getBody()).isEqualTo("133");
+    }
+
+    @Test
+    public void when_withdrawing_money_more_then_the_is_on_balance_error_is_return() {
+        // Given
+        HttpEntity<String> player = createRequestEntityWithRandomUsername();
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add",
+                player, String.class);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
+                new CreditSubmitDTO(UUID.randomUUID(), player.getBody(), 103L), String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        UUID id = UUID.randomUUID();
+
+        // When
+        ResponseEntity<String> resultWithdrawing = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/debit",
+                new DebitSubmitDTO(id, player.getBody(), 143L), String.class);
+        ResponseEntity<String> balance = restTemplate.getForEntity("http://localhost:" + randomServerPort + "/wallet?username={param1}",
+                String.class, player.getBody());
+
+        assertThat(resultWithdrawing).isNotNull();
+        assertThat(resultWithdrawing.getStatusCode()).isNotNull().isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(resultWithdrawing.getBody()).isNotNull().isEqualTo(INSUFFICIENT_FUNDS_ERROR_MESSAGE);
+
     }
 
 }
