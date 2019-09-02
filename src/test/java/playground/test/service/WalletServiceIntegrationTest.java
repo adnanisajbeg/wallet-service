@@ -8,6 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import playground.test.exceptions.InvalidInputException;
 import playground.test.exceptions.PlayerNotFoundException;
 import playground.test.model.CreditSubmitDTO;
+import playground.test.model.DebitSubmitDTO;
 import playground.test.model.Player;
 import playground.test.model.PlayerDTO;
 import playground.test.repository.PlayerRepository;
@@ -92,4 +93,52 @@ public class WalletServiceIntegrationTest {
         walletService.addCreditForPlayer(new CreditSubmitDTO(id, player.getUsername(), -15L));
     }
 
+    @Test
+    public void when_withdrawing_funds_for_existing_player_correct_value_will_be_in_db() {
+        // Given
+        Player player = playerRepository.save(new Player(createPlayerWithRandomUsername()));
+        assertThat(player).isNotNull();
+        UUID id = UUID.randomUUID();
+        walletService.addCreditForPlayer(new CreditSubmitDTO(id, player.getUsername(), 15L));
+
+        // When
+        walletService.withdrawForPlayer(new DebitSubmitDTO(id, player.getUsername(), 10L));
+
+        // Then
+        Player playerStatus = playerRepository.findByUsername(player.getUsername());
+        assertThat(playerStatus).isNotNull();
+        assertThat(playerStatus.getBalance()).isEqualTo(5L);
+    }
+
+    @Test
+    public void when_withdrawing_funds_multiple_times_for_existing_player_correct_value_will_be_in_db() {
+        // Given
+        Player player = playerRepository.save(new Player(createPlayerWithRandomUsername()));
+        assertThat(player).isNotNull();
+        UUID id = UUID.randomUUID();
+        walletService.addCreditForPlayer(new CreditSubmitDTO(id, player.getUsername(), 125L));
+
+        // When
+        walletService.withdrawForPlayer(new DebitSubmitDTO(id, player.getUsername(), 10L));
+        walletService.withdrawForPlayer(new DebitSubmitDTO(id, player.getUsername(), 12L));
+        walletService.withdrawForPlayer(new DebitSubmitDTO(id, player.getUsername(), 13L));
+
+        // Then
+        Player playerStatus = playerRepository.findByUsername(player.getUsername());
+        assertThat(playerStatus).isNotNull();
+        assertThat(playerStatus.getBalance()).isEqualTo(125L - 10L - 12L - 13L);
+    }
+
+    @Test(expected = PlayerNotFoundException.class)
+    public void when_withdrawing_funds_multiple_times_for_non_existing_player_exception_is_thrown() {
+        // Given
+        PlayerDTO player = createPlayerWithRandomUsername();
+        assertThat(player).isNotNull();
+        UUID id = UUID.randomUUID();
+
+        // When
+        walletService.withdrawForPlayer(new DebitSubmitDTO(id, player.getUsername(), 10L));
+    }
+
+    
 }

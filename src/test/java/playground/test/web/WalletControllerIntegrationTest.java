@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import playground.test.model.CreditSubmitDTO;
+import playground.test.model.DebitSubmitDTO;
 import playground.test.model.PlayerDTO;
 
 import java.util.UUID;
@@ -144,6 +145,33 @@ public class WalletControllerIntegrationTest {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).isNotNull().isEqualTo(CREDIT_NON_POSITIVE_ERROR_MESSAGE);
+    }
+
+    @Test
+    public void when_withdrawing_money_for_valid_player_balance_is_correctly_updated() {
+        // Given
+        HttpEntity<String> player = createRequestEntityWithRandomUsername();
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add",
+                player, String.class);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
+                new CreditSubmitDTO(UUID.randomUUID(), player.getBody(), 145L), String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        UUID id = UUID.randomUUID();
+
+        // When
+        ResponseEntity<String> resultAddingBalance = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/debit",
+                new DebitSubmitDTO(id, player.getBody(), 12L), String.class);
+        ResponseEntity<String> balance = restTemplate.getForEntity("http://localhost:" + randomServerPort + "/wallet?username={param1}",
+                String.class, player.getBody());
+
+        // Then
+        assertThat(resultAddingBalance).isNotNull();
+        assertThat(resultAddingBalance.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(resultAddingBalance.getBody()).isEqualTo(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + player.getBody() + "!");
+        assertThat(balance).isNotNull();
+        assertThat(balance.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(balance.getBody()).isEqualTo("133");
     }
 
 }

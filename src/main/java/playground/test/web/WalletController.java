@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import playground.test.exceptions.InvalidInputException;
 import playground.test.exceptions.PlayerNotFoundException;
 import playground.test.model.CreditSubmitDTO;
+import playground.test.model.DebitSubmitDTO;
 import playground.test.model.Player;
 import playground.test.service.PlayerService;
 import playground.test.service.WalletService;
-
-import java.util.UUID;
 
 import static playground.test.utils.Messages.CREDIT_ADDED_SUCCESSFULLY_MESSAGE;
 import static playground.test.utils.Messages.USERNAME_NOT_FOUND_ERROR_MESSAGE;
@@ -46,5 +45,18 @@ public class WalletController {
         }
 
         return new ResponseEntity<>(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + creditSubmitDTO.getUsername() + "!", HttpStatus.OK);
+    }
+
+    @PostMapping("/wallet/debit")
+    public ResponseEntity<String> debit(@RequestBody DebitSubmitDTO debitSubmitDTO) {
+        try {
+            walletService.withdrawForPlayer(debitSubmitDTO);
+        } catch (PlayerNotFoundException pnfe) {
+            return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
+        } catch (InvalidInputException iie) {
+            return new ResponseEntity<>(iie.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + debitSubmitDTO.getUsername() + "!", HttpStatus.OK);
     }
 }

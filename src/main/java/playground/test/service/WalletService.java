@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import playground.test.exceptions.PlayerNotFoundException;
 import playground.test.model.CreditSubmitDTO;
+import playground.test.model.DebitSubmitDTO;
 import playground.test.model.Player;
 import playground.test.validator.PlayerValidator;
 
@@ -21,6 +22,12 @@ public class WalletService {
         playerValidator.validateCreditSubmitDTO(creditSubmitDTO);
         Player player = findPlayer(creditSubmitDTO.getUsername());
         player.addCredit(creditSubmitDTO.getCredit());
+        playerService.savePlayer(player);
+    }
+
+    public void withdrawForPlayer(DebitSubmitDTO debitSubmitDTO) {
+        Player player = findPlayer(debitSubmitDTO.getUsername());
+        player.withdraw(debitSubmitDTO.getCredit());
         playerService.savePlayer(player);
     }
 

@@ -73,4 +73,8 @@ public class Player {
     public void addCredit(Long credit) {
         this.balance += credit;
     }
+
+    public void withdraw(Long credit) {
+        this.balance -= credit;
+    }
 }
