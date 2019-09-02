@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionSystemException;
 import playground.test.exceptions.InsufficientFundsException;
 import playground.test.exceptions.PlayerNotFoundException;
+import playground.test.model.Action;
 import playground.test.model.CreditSubmitDTO;
 import playground.test.model.DebitSubmitDTO;
 import playground.test.model.Player;
@@ -20,9 +21,13 @@ public class WalletService {
     @Autowired
     PlayerValidator playerValidator;
 
+    @Autowired
+    TransactionHistoryService transactionHistoryService;
+
     public void addCreditForPlayer(CreditSubmitDTO creditSubmitDTO) {
         playerValidator.validateCreditSubmitDTO(creditSubmitDTO);
         Player player = findPlayer(creditSubmitDTO.getUsername());
+        transactionHistoryService.addHistory(creditSubmitDTO.getId(), player, Action.CREDIT, creditSubmitDTO.getCredit());
         player.addCredit(creditSubmitDTO.getCredit());
         playerService.savePlayer(player);
     }
@@ -30,11 +35,13 @@ public class WalletService {
     public void withdrawForPlayer(DebitSubmitDTO debitSubmitDTO) {
         Player player = findPlayer(debitSubmitDTO.getUsername());
         player.withdraw(debitSubmitDTO.getCredit());
+//        transactionHistoryService.addHistory(debitSubmitDTO.getId(), player, Action.DEBIT, debitSubmitDTO.getCredit());
         try {
             playerService.savePlayer(player);
         } catch (TransactionSystemException tse) {
             throw new InsufficientFundsException();
         }
+//        transactionHistoryService.success(debitSubmitDTO.getId());
     }
 
     private Player findPlayer(String username) {

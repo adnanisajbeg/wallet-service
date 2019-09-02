@@ -110,15 +110,14 @@ public class WalletControllerIntegrationTest {
         ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add",
                 player, String.class);
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        UUID id = UUID.randomUUID();
 
         // When
         restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
-                new CreditSubmitDTO(id, player.getBody(), 10L), String.class);
+                new CreditSubmitDTO(UUID.randomUUID(), player.getBody(), 10L), String.class);
        restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
-                new CreditSubmitDTO(id, player.getBody(), 14L), String.class);
+                new CreditSubmitDTO(UUID.randomUUID(), player.getBody(), 14L), String.class);
          restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
-                new CreditSubmitDTO(id, player.getBody(), 22L), String.class);
+                new CreditSubmitDTO(UUID.randomUUID(), player.getBody(), 22L), String.class);
         ResponseEntity<String> balance = restTemplate.getForEntity("http://localhost:" + randomServerPort + "/wallet?username={param1}",
                 String.class, player.getBody());
 
@@ -184,11 +183,10 @@ public class WalletControllerIntegrationTest {
         ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
                 new CreditSubmitDTO(UUID.randomUUID(), player.getBody(), 103L), String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        UUID id = UUID.randomUUID();
 
         // When
         ResponseEntity<String> resultWithdrawing = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/debit",
-                new DebitSubmitDTO(id, player.getBody(), 143L), String.class);
+                new DebitSubmitDTO( UUID.randomUUID(), player.getBody(), 143L), String.class);
         ResponseEntity<String> balance = restTemplate.getForEntity("http://localhost:" + randomServerPort + "/wallet?username={param1}",
                 String.class, player.getBody());
 

@@ -11,7 +11,9 @@ import playground.test.exceptions.PlayerNotFoundException;
 import playground.test.model.CreditSubmitDTO;
 import playground.test.model.DebitSubmitDTO;
 import playground.test.model.Player;
+import playground.test.model.TransactionHistory;
 import playground.test.service.PlayerService;
+import playground.test.service.TransactionHistoryService;
 import playground.test.service.WalletService;
 
 import static playground.test.utils.Messages.*;
@@ -23,6 +25,9 @@ public class WalletController {
 
     @Autowired
     WalletService walletService;
+
+    @Autowired
+    TransactionHistoryService transactionHistoryService;
 
     @GetMapping("/wallet")
     public ResponseEntity<String> getBalance(@RequestParam String username) {
@@ -40,8 +45,10 @@ public class WalletController {
         try {
             walletService.addCreditForPlayer(creditSubmitDTO);
         } catch (PlayerNotFoundException pnfe) {
+            transactionHistoryService.failed(creditSubmitDTO.getId());
             return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         } catch (InvalidInputException iie) {
+            transactionHistoryService.failed(creditSubmitDTO.getId());
             return new ResponseEntity<>(iie.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
@@ -53,12 +60,16 @@ public class WalletController {
         try {
             walletService.withdrawForPlayer(debitSubmitDTO);
         } catch (PlayerNotFoundException pnfe) {
+//            transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         } catch (InvalidInputException iie) {
+//            transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(iie.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (InsufficientFundsException tse) {
+//            transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(INSUFFICIENT_FUNDS_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
+//            transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(TRANSACTION_FAILED_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
 

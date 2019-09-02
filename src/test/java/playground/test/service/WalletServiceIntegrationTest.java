@@ -60,13 +60,12 @@ public class WalletServiceIntegrationTest {
         // Given
         Player player = playerRepository.save(new Player(createPlayerWithRandomUsername()));
         assertThat(player).isNotNull();
-        UUID id = UUID.randomUUID();
 
         // When
-        walletService.addCreditForPlayer(new CreditSubmitDTO(id, player.getUsername(), 15L));
-        walletService.addCreditForPlayer(new CreditSubmitDTO(id, player.getUsername(), 11L));
-        walletService.addCreditForPlayer(new CreditSubmitDTO(id, player.getUsername(), 23L));
-        walletService.addCreditForPlayer(new CreditSubmitDTO(id, player.getUsername(), 56L));
+        walletService.addCreditForPlayer(new CreditSubmitDTO(UUID.randomUUID(), player.getUsername(), 15L));
+        walletService.addCreditForPlayer(new CreditSubmitDTO(UUID.randomUUID(), player.getUsername(), 11L));
+        walletService.addCreditForPlayer(new CreditSubmitDTO(UUID.randomUUID(), player.getUsername(), 23L));
+        walletService.addCreditForPlayer(new CreditSubmitDTO(UUID.randomUUID(), player.getUsername(), 56L));
 
         // Then
         Player playerStatus = playerRepository.findByUsername(player.getUsername());
@@ -116,13 +115,12 @@ public class WalletServiceIntegrationTest {
         // Given
         Player player = playerRepository.save(new Player(createPlayerWithRandomUsername()));
         assertThat(player).isNotNull();
-        UUID id = UUID.randomUUID();
-        walletService.addCreditForPlayer(new CreditSubmitDTO(id, player.getUsername(), 125L));
+        walletService.addCreditForPlayer(new CreditSubmitDTO(UUID.randomUUID(), player.getUsername(), 125L));
 
         // When
-        walletService.withdrawForPlayer(new DebitSubmitDTO(id, player.getUsername(), 10L));
-        walletService.withdrawForPlayer(new DebitSubmitDTO(id, player.getUsername(), 12L));
-        walletService.withdrawForPlayer(new DebitSubmitDTO(id, player.getUsername(), 13L));
+        walletService.withdrawForPlayer(new DebitSubmitDTO(UUID.randomUUID(), player.getUsername(), 10L));
+        walletService.withdrawForPlayer(new DebitSubmitDTO(UUID.randomUUID(), player.getUsername(), 12L));
+        walletService.withdrawForPlayer(new DebitSubmitDTO(UUID.randomUUID(), player.getUsername(), 13L));
 
         // Then
         Player playerStatus = playerRepository.findByUsername(player.getUsername());
