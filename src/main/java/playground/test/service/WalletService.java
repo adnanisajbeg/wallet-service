@@ -34,8 +34,6 @@ public class WalletService {
 
     public void withdrawForPlayer(DebitSubmitDTO debitSubmitDTO) {
         Player player = findPlayer(debitSubmitDTO.getUsername());
-        System.out.println("player: " + player);    // TODO: DELETE
-        System.out.println("debitSubmitDTO: " + debitSubmitDTO);    // TODO: DELETE
         transactionHistoryService.addHistory(debitSubmitDTO.getId(), player, Action.DEBIT, debitSubmitDTO.getCredit());
         try {
             player.withdraw(debitSubmitDTO.getCredit());

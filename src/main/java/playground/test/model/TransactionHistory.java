@@ -14,6 +14,7 @@ public class TransactionHistory {
     @NotNull
     @Column(unique = true)
     private UUID uuid;
+    @NotNull
     @ManyToOne
     private Player player;
     @NotNull
