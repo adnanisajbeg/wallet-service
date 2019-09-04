@@ -167,7 +167,7 @@ public class WalletControllerIntegrationTest {
         // Then
         assertThat(resultForWithdrawing).isNotNull();
         assertThat(resultForWithdrawing.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(resultForWithdrawing.getBody()).isEqualTo(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + player.getBody() + "!");
+        assertThat(resultForWithdrawing.getBody()).isEqualTo(CREDIT_WITHDRAW_SUCCESSFULLY_MESSAGE + player.getBody() + " successful!");
         assertThat(balance).isNotNull();
         assertThat(balance.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(balance.getBody()).isEqualTo("133");
