@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TransactionHistoryController {
 
-    @GetMapping("/wallet")
+    @GetMapping("/history")
     public HttpEntity<String> getHistory(@RequestParam String username) {
         return null;
     }
