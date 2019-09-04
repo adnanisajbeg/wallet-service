@@ -5,6 +5,7 @@ public class Messages {
     public static final String USERNAME_TAKEN_ERROR_MESSAGE = "Username already taken!";
     public static final String USER_CREATED_MESSAGE = "User created!";
     public static final String CREDIT_ADDED_SUCCESSFULLY_MESSAGE = "Credit added to user ";
+    public static final String CREDIT_WITHDRAW_SUCCESSFULLY_MESSAGE = "Credit withdrawal from user ";
     public static final String PLAYER_NOT_FOUND_MESSAGE = "Player not found!";
 
     public static final String CREDIT_NON_POSITIVE_ERROR_MESSAGE = "Credit for player must be positive!";

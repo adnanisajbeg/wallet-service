@@ -75,6 +75,6 @@ public class WalletController {
             return new ResponseEntity<>(TRANSACTION_FAILED_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + debitSubmitDTO.getUsername() + "!", HttpStatus.OK);
+        return new ResponseEntity<>(CREDIT_WITHDRAW_SUCCESSFULLY_MESSAGE + debitSubmitDTO.getUsername() + " successful!", HttpStatus.OK);
     }
 }
