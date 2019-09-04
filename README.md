@@ -22,6 +22,18 @@ To use this project you will need:
 
  ```https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-running-your-application.html```
 
+## Database
+
+Current setup of H2 database is to save data between restarts in a file, which is set with this property (in ```application.properties```):
+```
+spring.datasource.url=jdbc:h2:file:./data/wallet-db
+```
+
+To access db, use this endpoint:
+
+```
+http://localhost:8080/h2
+```
 
  ## Endpoints
 
