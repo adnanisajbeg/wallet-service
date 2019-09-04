@@ -2,23 +2,29 @@ package playground.test.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import playground.test.model.Action;
-import playground.test.model.Player;
-import playground.test.model.Status;
-import playground.test.model.TransactionHistory;
+import playground.test.exceptions.InvalidInputException;
+import playground.test.exceptions.PlayerNotFoundException;
+import playground.test.model.*;
+import playground.test.repository.PlayerRepository;
 import playground.test.repository.TransactionHistoryRepository;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import static playground.test.utils.Messages.USERNAME_NOT_FOUND_ERROR_MESSAGE;
 
 @Component
 public class TransactionHistoryService {
     @Autowired
     TransactionHistoryRepository transactionHistoryRepository;
 
+    @Autowired
+    PlayerService playerService;
+
     public void addHistory(UUID uuid, Player player, Action action, long amount) {
         TransactionHistory transactionHistory = new TransactionHistory(uuid, player, action, amount);
-        System.out.println(transactionHistory);
         transactionHistoryRepository.save(transactionHistory);
     }
 
@@ -28,6 +34,34 @@ public class TransactionHistoryService {
 
     public void failed(UUID uuid) {
         statusChanged(uuid, Status.FAILED);
+    }
+
+    public List<TransactionHistoryDTO> getHistory(String username) {
+        Player player = playerService.findUserByUsername(username);
+
+        if (player == null) {
+            throw new InvalidInputException(USERNAME_NOT_FOUND_ERROR_MESSAGE);
+        }
+
+        List<TransactionHistory> transactionHistoryList = transactionHistoryRepository.findByPlayer(player);
+
+        return createResultList(transactionHistoryList);
+    }
+
+    private List<TransactionHistoryDTO> createResultList(List<TransactionHistory> transactionHistoryList) {
+        List<TransactionHistoryDTO> result = new ArrayList<>();
+
+        if (transactionHistoryList != null && !transactionHistoryList.isEmpty()) {
+            for (TransactionHistory transactionHistory : transactionHistoryList) {
+                result.add(new TransactionHistoryDTO(
+                        transactionHistory.getUuid(),
+                        transactionHistory.getAction(),
+                        transactionHistory.getAmount(),
+                        transactionHistory.getStatus()));
+            }
+        }
+
+        return result;
     }
 
     void statusChanged(UUID uuid, @NotNull  Status status) {

@@ -44,6 +44,7 @@ public class WalletController {
     public ResponseEntity<String> addCredit(@RequestBody CreditSubmitDTO creditSubmitDTO) {
         try {
             walletService.addCreditForPlayer(creditSubmitDTO);
+            transactionHistoryService.success(creditSubmitDTO.getId());
         } catch (PlayerNotFoundException pnfe) {
             transactionHistoryService.failed(creditSubmitDTO.getId());
             return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
@@ -59,6 +60,7 @@ public class WalletController {
     public ResponseEntity<String> debit(@RequestBody DebitSubmitDTO debitSubmitDTO) {
         try {
             walletService.withdrawForPlayer(debitSubmitDTO);
+            transactionHistoryService.success(debitSubmitDTO.getId());
         } catch (PlayerNotFoundException pnfe) {
             transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(USERNAME_NOT_FOUND_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);

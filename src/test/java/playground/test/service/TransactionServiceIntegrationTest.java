@@ -2,17 +2,15 @@ package playground.test.service;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import playground.test.model.Action;
-import playground.test.model.Player;
-import playground.test.model.Status;
-import playground.test.model.TransactionHistory;
+import playground.test.exceptions.InvalidInputException;
+import playground.test.model.*;
 import playground.test.repository.PlayerRepository;
 import playground.test.repository.TransactionHistoryRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,5 +79,33 @@ public class TransactionServiceIntegrationTest {
         assertThat(transactionHistory.getAction()).isNotNull().isEqualTo(Action.DEBIT);
         assertThat(transactionHistory.getStatus()).isNotNull().isEqualTo(Status.FAILED);
         assertThat(transactionHistory.getAmount()).isEqualTo(1223L);
+    }
+
+    @Test(expected = InvalidInputException.class)
+    public void when_asked_for_history_for_non_existing_player_exception_is_thrown() {
+        // When
+        List<TransactionHistoryDTO> history = transactionHistoryService.getHistory(createPlayerWithRandomUsername().getUsername());
+    }
+
+    @Test
+    public void when_requesting_history_for_existing_usser_correct_records_is_return() {
+        // Given
+        PlayerDTO playerDTO = createPlayerWithRandomUsername();
+        Player player = playerRepository.save(new Player(playerDTO));
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+        transactionHistoryService.addHistory(uuid1, player, Action.CREDIT, 54545L);
+        transactionHistoryService.addHistory(uuid2, player, Action.DEBIT, 344L);
+
+        // When
+        List<TransactionHistoryDTO> history = transactionHistoryService.getHistory(player.getUsername());
+
+        // Then
+        assertThat(history)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(2)
+                .contains(new TransactionHistoryDTO(uuid1, Action.CREDIT, 54545L, Status.REQUESTED),
+                        new TransactionHistoryDTO(uuid2, Action.DEBIT, 344L, Status.REQUESTED));
     }
 }
