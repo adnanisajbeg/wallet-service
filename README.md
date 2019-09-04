@@ -14,74 +14,79 @@ To use this project you will need:
  - Java JDK 1.8
  - Maven compatible with JDK 1.8
 
- In order to run the service through your IDE, navigate to playground.test.Application.java and run the Application. To run application from console, use  'mvn spring-boot:run' .
+ In order to run the service through your IDE, navigate to ```playground.test.Application.java``` and run the Application. To run application from console, use  ```mvn spring-boot:run``` .
 
- In order to run all tests and create executable jar, use command mvn clean install at root folder.
+ In order to run all tests and create executable jar, use command ```mvn clean install``` at root folder.
 
  More details how to start Spring Boot application can be found on this link:
 
- https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-running-your-application.html
+ ```https://docs.spring.io/spring-boot/docs/current/reference/html/using-boot-running-your-application.html```
 
 
  ## Endpoints
 
-By default service will start at port 8080. To change port, add property server.port = PORT_NUMBER in application.properties file. 
+By default service will start at port ```8080```. To change port, add property ```server.port = PORT_NUMBER``` in ```application.properties``` file. 
 
 APIs that are available:
 
 ### Create player
 
-In order to create new user, send POST request on:
+In order to create new user, send ```POST``` request on:
 
-http://localhost:8080/player/add
+```http://localhost:8080/player/add```
 
-with body that contains username (check test/java/playground/test/web/PlayerControllerIntegrationTest for examples).
+with body that contains username (check ```test/java/playground/test/web/PlayerControllerIntegrationTest``` for examples).
 
-In case that username is created correctly, response will be "User created!" with HttpStatus 200. 
+In case that username is created correctly, response will be ```"User created!"``` with ```HttpStatus 200```. 
 
-Newly created user will have balance 0.
+Newly created user will have balance ```0```.
 
 ### Check balance
 
-To get current balance of the player, send GET request on:
+To get current balance of the player, send ```GET``` request on:
 
-http://localhost:8080/wallet?username=USERNAME_VALUE
+```http://localhost:8080/wallet?username=USERNAME_VALUE```
 
 If given username exists in record, its balance will be returned. Otherwise error message will be given. Provided balance is of type long.
 
 ### Add funds
 
-To add funds to player, send POST request on:
+To add funds to player, send ```POST``` request on:
 
-http://localhost:8080/wallet/credit
+```http://localhost:8080/wallet/credit```
 
 with body:
 
-{"id":"UUID","username":"USERNAME","credit":AMOUNT}
+```{"id":"UUID","username":"USERNAME","credit":AMOUNT}```
 
-Adding funds will fail if provided username is not valid player, id is not of correct format (UUID format).
+and header:
+
+```Content-Type: applcation/json```
+
+Adding funds will fail if provided username is not valid player, id is not of correct format (```UUID``` format).
 
 ### Withdrawing funds
 
-To withdraw funds, send POST request on:
+To withdraw funds, send ```POST``` request on:
 
-http://localhost:8080/wallet/debit
+```http://localhost:8080/wallet/debit```
 
 with body:
 
-{"id":"UUID","username":"USERNAME","credit":AMOUNT}
+```{"id":"UUID","username":"USERNAME","credit":AMOUNT}```
 
 
-Withdrawal will fail if provided username is not valid player, id is not of correct format (UUID format) and when there is not enough funds on username balance.
+Withdrawal will fail if provided username is not valid player, id is not of correct format (```UUID``` format) and when there is not enough funds on username balance.
 
 ### Transaction history
 
-To see transaction history for a player, send GET request on:
+To see transaction history for a player, send ```GET``` request on:
 
-http://localhost:8080/history?username=USERNAME
+```http://localhost:8080/history?username=USERNAME```
 
-If username exists, then reponse will contain players history. Example of one player history:
+If username exists, then response will contain players history. Example of one player history:
 
+```
 {
     "transactionHistoryList": [
         {
@@ -111,13 +116,15 @@ If username exists, then reponse will contain players history. Example of one pl
     ],
     "errors": []
 }
+```
 
-In case of some error during data retrial or in case of invalid username, list of erros will be returned. One such example:
+In case of some error during data retrial or in case of invalid username, list of errors will be returned. One such example:
 
-
+```
 {
     "transactionHistoryList": [],
     "errors": [
         "Invalid username!"
     ]
 }
+```
