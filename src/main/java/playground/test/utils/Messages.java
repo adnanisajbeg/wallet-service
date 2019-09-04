@@ -7,6 +7,7 @@ public class Messages {
     public static final String CREDIT_ADDED_SUCCESSFULLY_MESSAGE = "Credit added to user ";
     public static final String CREDIT_WITHDRAW_SUCCESSFULLY_MESSAGE = "Credit withdrawal from user ";
     public static final String PLAYER_NOT_FOUND_MESSAGE = "Player not found!";
+    public static final String INVALID_UUID_ERROR_MESSAGE = "Invalid uuid!";
 
     public static final String CREDIT_NON_POSITIVE_ERROR_MESSAGE = "Credit for player must be positive!";
     public static final String USERNAME_MUST_BE_PROVIDED_ERROR_MESSAGE = "Username must be provided!";

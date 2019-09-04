@@ -1,6 +1,8 @@
 package playground.test.web;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
@@ -51,6 +53,12 @@ public class WalletController {
         } catch (InvalidInputException iie) {
             transactionHistoryService.failed(creditSubmitDTO.getId());
             return new ResponseEntity<>(iie.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (DataIntegrityViolationException dve) {
+            transactionHistoryService.failed(creditSubmitDTO.getId());
+            return new ResponseEntity<>(INVALID_UUID_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            transactionHistoryService.failed(creditSubmitDTO.getId());
+            return new ResponseEntity<>(TRANSACTION_FAILED_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(CREDIT_ADDED_SUCCESSFULLY_MESSAGE + creditSubmitDTO.getUsername() + "!", HttpStatus.OK);
@@ -70,6 +78,9 @@ public class WalletController {
         } catch (InsufficientFundsException tse) {
             transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(INSUFFICIENT_FUNDS_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
+        } catch (DataIntegrityViolationException dve) {
+            transactionHistoryService.failed(debitSubmitDTO.getId());
+            return new ResponseEntity<>(INVALID_UUID_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             transactionHistoryService.failed(debitSubmitDTO.getId());
             return new ResponseEntity<>(TRANSACTION_FAILED_ERROR_MESSAGE, HttpStatus.BAD_REQUEST);

@@ -193,7 +193,48 @@ public class WalletControllerIntegrationTest {
         assertThat(resultWithdrawing).isNotNull();
         assertThat(resultWithdrawing.getStatusCode()).isNotNull().isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(resultWithdrawing.getBody()).isNotNull().isEqualTo(INSUFFICIENT_FUNDS_ERROR_MESSAGE);
+    }
 
+    @Test
+    public void when_adding_credits_but_with_already_existing_uuid_error_message_is_returned() {
+        // Given
+        HttpEntity<String> player = createRequestEntityWithRandomUsername();
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add",
+                player, String.class);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        UUID id = UUID.randomUUID();
+
+        // When
+        restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
+                new CreditSubmitDTO(id, player.getBody(), 123L), String.class);
+        ResponseEntity<String> response2 = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
+                new CreditSubmitDTO(id, player.getBody(), 232L), String.class);
+
+        // Then
+        assertThat(response2).isNotNull();
+        assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response2.getBody()).isNotNull().isEqualTo(INVALID_UUID_ERROR_MESSAGE);
+    }
+
+    @Test
+    public void when_withdrawing_credits_but_with_already_existing_uuid_error_message_is_returned() {
+        // Given
+        HttpEntity<String> player = createRequestEntityWithRandomUsername();
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/player/add",
+                player, String.class);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        UUID id = UUID.randomUUID();
+
+        // When
+        restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/credit",
+                new CreditSubmitDTO(id, player.getBody(), 123L), String.class);
+        ResponseEntity<String> resultForWithdrawing = restTemplate.postForEntity("http://localhost:" + randomServerPort + "/wallet/debit",
+                new DebitSubmitDTO(id, player.getBody(), 12L), String.class);
+
+        // Then
+        assertThat(resultForWithdrawing).isNotNull();
+        assertThat(resultForWithdrawing.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(resultForWithdrawing.getBody()).isNotNull().isEqualTo(INVALID_UUID_ERROR_MESSAGE);
     }
 
 }
